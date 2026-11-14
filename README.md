@@ -1,60 +1,43 @@
-# Frontend
+# Support Orders Web App - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.5.
+Interfaz web construida con Angular para que los operadores visualicen, filtren y gestionen el ciclo de vida de las órdenes de soporte reportadas desde la aplicación móvil.
 
-## Development server
+## 🛠️ Stack Tecnológico
+- **Framework:** Angular 17+ (Standalone Components)
+- **Lenguaje:** TypeScript (Tipado estricto)
+- **UI Library:** Angular Material
+- **Gestión de Estado:** Angular Signals y Reactive Forms
+- **HTTP Client:** Angular HttpClient con Interceptores funcionales
+- **Build Tool:** Angular CLI
 
-To start a local development server, run:
+## 🏗️ Arquitectura Frontend
+Se utilizó una arquitectura modular basada en **Features** con componentes Standalone. Esta elección elimina el boilerplate de los `NgModules`, mejora el *tree-shaking* y permite un *lazy loading* más granular de las rutas.
 
-```bash
-ng serve
-```
+- **`core/`**: Infraestructura de la aplicación. Contiene servicios singleton (`SupportOrderService`) e interceptores globales (`errorInterceptor`).
+- **`shared/`**: Modelos TypeScript estrictamente tipados que reflejan los DTOs del backend, y componentes reutilizables.
+- **`features/`**: Módulos autocontenidos por caso de uso (`order-list`, `order-create`, `order-detail`). Cada feature es independiente y conoce su propio estado.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🔌 Integración con el Backend
+*(Nota: Los detalles de configuración de CORS y contratos de API se detallan en el correo de entrega y en el README del backend).*
+- **Contrato de API:** El frontend consume la API REST basándose estrictamente en los DTOs acordados. 
+- **Manejo de Errores:** Se implementó un **Interceptor de Errores Global** (`HttpInterceptorFn`) que captura las respuestas HTTP de error (ej. 400, 409) y muestra notificaciones (`MatSnackBar`) al usuario, manteniendo los componentes visuales libres de lógica de manejo de errores (SRP).
+- **Sincronización de Reglas de Negocio:** La lógica de transiciones de estado del backend (Patrón State) se replica en el frontend mediante propiedades computadas (`computed`), mostrando al usuario únicamente las opciones de estado válidas en tiempo real, previniendo errores de UX antes de que ocurran.
 
-## Code scaffolding
+## ✅ Funcionalidades Implementadas
+1. **Listado:** Tabla responsive con filtro dinámico por estado.
+2. **Creación:** Formulario reactivo con validaciones en tiempo real (ej. longitud de descripción, campos obligatorios).
+3. **Detalle:** Vista completa de la orden con metadatos.
+4. **Actualización de Estado:** Dropdown restrictivo que solo permite transiciones válidas.
+5. **UX:** Manejo de estados de carga (`MatSpinner`), éxito y error.
+6. **Responsive:** Diseño adaptable a ventanas estrechas mediante CSS Grid y Media Queries.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🚀 Instrucciones de Ejecución
 
-```bash
-ng generate component component-name
-```
+### Prerrequisitos
+- Node.js 18+
+- npm
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-# support-orders-frontend
+### Pasos
+1. Instalar dependencias:
+   ```bash
+   npm install
