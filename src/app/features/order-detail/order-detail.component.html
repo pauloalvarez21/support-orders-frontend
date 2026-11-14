@@ -1,0 +1,94 @@
+@if (loading()) {
+  <div class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+} @else if (order(); as o) {
+  <mat-card class="detail-card">
+    <mat-card-header>
+      <mat-card-title>
+        <button mat-icon-button routerLink="/orders">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        Orden {{ o.externalReference }}
+      </mat-card-title>
+      <mat-card-subtitle>ID interno: #{{ o.id }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Estado</span>
+          <mat-chip [color]="getStatusColor(o.status)" highlighted>
+            {{ o.status }}
+          </mat-chip>
+        </div>
+
+        <div class="info-item">
+          <span class="label">Prioridad</span>
+          <mat-chip [color]="o.priority === 'HIGH' ? 'warn' : (o.priority === 'MEDIUM' ? 'accent' : '')">
+            {{ o.priority }}
+          </mat-chip>
+        </div>
+
+        <div class="info-item">
+          <span class="label">Categoría</span>
+          <span class="value">{{ o.category }}</span>
+        </div>
+
+        <div class="info-item">
+          <span class="label">Canal</span>
+          <span class="value">{{ o.channel }}</span>
+        </div>
+
+        <div class="info-item">
+          <span class="label">Cliente</span>
+          <span class="value">{{ o.customerId }}</span>
+        </div>
+
+        <div class="info-item">
+          <span class="label">Creada el</span>
+          <span class="value">{{ o.createdAt | date:'medium' }}</span>
+        </div>
+
+        <div class="info-item full-width">
+          <span class="label">Descripción</span>
+          <p class="description">{{ o.description }}</p>
+        </div>
+      </div>
+
+      <mat-divider class="divider"></mat-divider>
+
+      <div class="status-section">
+        <h3>Cambiar Estado</h3>
+        @if (allowedTransitions().length === 0) {
+          <p class="final-state">
+            <mat-icon>check_circle</mat-icon>
+            Esta orden está en un estado final y no puede ser modificada.
+          </p>
+        } @else {
+          <div class="status-actions">
+            <mat-form-field appearance="outline">
+              <mat-label>Nuevo estado</mat-label>
+              <mat-select [(value)]="selectedStatus">
+                @for (status of allowedTransitions(); track status) {
+                  <mat-option [value]="status">{{ status }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" 
+                    [disabled]="!selectedStatus() || updating()"
+                    (click)="onStatusChange()">
+              @if (updating()) {
+                <mat-spinner diameter="20"></mat-spinner>
+              } @else {
+                <mat-icon>update</mat-icon>
+              }
+              Actualizar
+            </button>
+          </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+}

@@ -1,0 +1,97 @@
+<mat-card class="form-card">
+  <mat-card-header>
+    <mat-card-title>
+      <button mat-icon-button routerLink="/orders">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      Nueva Orden de Soporte
+    </mat-card-title>
+    <mat-card-subtitle>Complete el formulario para registrar una incidencia</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Referencia Externa</mat-label>
+        <input matInput formControlName="externalReference" placeholder="MOB-1001">
+        @if (form.controls.externalReference.hasError('required')) {
+          <mat-error>La referencia es obligatoria</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>ID del Cliente</mat-label>
+        <input matInput formControlName="customerId" placeholder="CUST-001">
+        @if (form.controls.customerId.hasError('required')) {
+          <mat-error>El ID del cliente es obligatorio</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="category">
+          @for (cat of categories; track cat) {
+            <mat-option [value]="cat">{{ cat }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.category.hasError('required')) {
+          <mat-error>Seleccione una categoría</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Canal</mat-label>
+        <mat-select formControlName="channel">
+          @for (ch of channels; track ch) {
+            <mat-option [value]="ch">{{ ch }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.channel.hasError('required')) {
+          <mat-error>Seleccione un canal</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Prioridad</mat-label>
+        <mat-select formControlName="priority">
+          @for (p of priorities; track p) {
+            <mat-option [value]="p">{{ p }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.priority.hasError('required')) {
+          <mat-error>Seleccione una prioridad</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="description" rows="4" 
+                  placeholder="Describa la incidencia (entre 10 y 500 caracteres)"></textarea>
+        <mat-hint align="end">{{ form.controls.description.value?.length || 0 }} / 500</mat-hint>
+        @if (form.controls.description.hasError('required')) {
+          <mat-error>La descripción es obligatoria</mat-error>
+        }
+        @if (form.controls.description.hasError('minlength')) {
+          <mat-error>Mínimo 10 caracteres</mat-error>
+        }
+        @if (form.controls.description.hasError('maxlength')) {
+          <mat-error>Máximo 500 caracteres</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="form-actions full-width">
+        <button mat-button type="button" routerLink="/orders" [disabled]="submitting()">
+          Cancelar
+        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="submitting()">
+          @if (submitting()) {
+            <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+          } @else {
+            <mat-icon>save</mat-icon>
+          }
+          Crear Orden
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
